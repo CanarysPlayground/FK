@@ -66,7 +66,6 @@ tail -n +2 "$CSV_FILE" | while IFS=',' read -r SOURCE CURRENT_NAME DESTINATION N
         --ghes-api-url "$GHES_API_URL" \
         --azure-storage-connection-string "$AZURE_STORAGE_CONNECTION_STRING" >> "$LOG_FILE" 2>&1
 
-    # Check for errors
     if [[ $? -eq 0 ]]; then
         echo "✅ Migration for $CURRENT_NAME to $CLEAN_NEW_NAME completed successfully!" | tee -a "$LOG_FILE"
         SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
@@ -84,3 +83,4 @@ echo "Summary:" | tee -a "$LOG_FILE"
 echo "  ✅ Successful migrations: $SUCCESS_COUNT" | tee -a "$LOG_FILE"
 echo "  ❌ Failed migrations: $FAILURE_COUNT" | tee -a "$LOG_FILE"
 echo "For details, check the log file: $LOG_FILE"
+exit 0
