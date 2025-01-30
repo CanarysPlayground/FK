@@ -46,11 +46,9 @@ echo "Migration process started at $(date)" | tee -a "$LOG_FILE"
 echo "Reading from CSV file: $CSV_FILE" | tee -a "$LOG_FILE"
 
 # Read CSV file and process each row while skipping the header
-while IFS=',' read -r SOURCE CURRENT_NAME DESTINATION NEW_NAME; do
-    # Skip empty lines and header row
-    if [[ -z "$SOURCE" || "$SOURCE" == "SOURCE" ]]; then
-        continue
-    fi
+tail -n +2 "$CSV_FILE" | while IFS=',' read -r SOURCE CURRENT_NAME DESTINATION NEW_NAME; do
+    # Skip empty lines
+    [[ -z "$SOURCE" ]] && continue  
 
     # Sanitize NEW-NAME by removing trailing dashes
     CLEAN_NEW_NAME=$(echo "$NEW_NAME" | sed 's/-$//')
@@ -76,9 +74,8 @@ while IFS=',' read -r SOURCE CURRENT_NAME DESTINATION NEW_NAME; do
         echo "❌ Migration for $CURRENT_NAME to $CLEAN_NEW_NAME failed. Check logs for details." | tee -a "$LOG_FILE"
         FAILURE_COUNT=$((FAILURE_COUNT + 1))
     fi
-
-echo "-------------------------------------------" | tee -a "$LOG_FILE"
-done < <(tail -n +2 "$CSV_FILE")  # Skip the first row (header)
+    echo "-------------------------------------------" | tee -a "$LOG_FILE"
+done
 
 # Print summary
 echo "Migration process completed at $(date)" | tee -a "$LOG_FILE"
