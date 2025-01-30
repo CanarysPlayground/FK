@@ -83,4 +83,6 @@ echo "Summary:" | tee -a "$LOG_FILE"
 echo "  ✅ Successful migrations: $SUCCESS_COUNT" | tee -a "$LOG_FILE"
 echo "  ❌ Failed migrations: $FAILURE_COUNT" | tee -a "$LOG_FILE"
 echo "For details, check the log file: $LOG_FILE"
+
+# Ensure script exits properly
 exit 0
